@@ -154,7 +154,7 @@ def chat():
         })
 
         response = client.chat.completions.create(
-            model="meta-llama/llama-3.3-70b-instruct:free",
+            model="mistralai/mistral-small-3.1-24b-instruct:free",
             max_tokens=2048,
             messages=[
                 {
@@ -210,7 +210,7 @@ Make them feel natural and human — not like AI wrote them.
 Target audience in {location} or globally if no location given."""
 
         response = client.chat.completions.create(
-            model="meta-llama/llama-3.3-70b-instruct:free",
+            model="mistralai/mistral-small-3.1-24b-instruct:free",
             max_tokens=2048,
             messages=[
                 {

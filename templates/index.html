@@ -14,12 +14,9 @@
       --navy-light: #1A2444;
       --gold: #C9A84C;
       --gold-light: #E8C97A;
-      --gold-pale: #F5E9C8;
       --white: #F8F6F0;
       --text-muted: #8A93B2;
       --border: rgba(201,168,76,0.15);
-      --user-bubble: linear-gradient(135deg, #C9A84C, #E8C97A);
-      --bot-bubble: #1A2444;
     }
 
     body {
@@ -93,25 +90,25 @@
     }
 
     .header {
-      padding: 20px 24px 18px;
+      padding: 16px 20px;
       background: linear-gradient(180deg, rgba(201,168,76,0.08) 0%, transparent 100%);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       flex-shrink: 0;
     }
 
     .logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
       background: linear-gradient(135deg, #C9A84C, #E8C97A);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'Playfair Display', serif;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--navy);
       flex-shrink: 0;
@@ -122,33 +119,39 @@
 
     .header-name {
       font-family: 'Playfair Display', serif;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
       color: var(--gold-light);
       letter-spacing: 0.01em;
     }
 
     .header-tagline {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 1px;
       font-weight: 300;
       letter-spacing: 0.03em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .status-dot {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11px;
+      gap: 5px;
+      font-size: 10px;
       color: #5DCAA5;
       font-weight: 500;
     }
 
     .status-dot::before {
       content: '';
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: #5DCAA5;
       box-shadow: 0 0 8px #5DCAA5;
@@ -160,13 +163,30 @@
       50% { opacity: 0.4; }
     }
 
+    .clear-btn {
+      font-size: 10px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(201,168,76,0.2);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .clear-btn:hover {
+      border-color: rgba(201,168,76,0.5);
+      color: var(--gold);
+    }
+
     .messages {
       flex: 1;
       overflow-y: auto;
-      padding: 20px 20px 10px;
+      padding: 16px 16px 8px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       scroll-behavior: smooth;
     }
 
@@ -190,7 +210,7 @@
 
     .msg {
       max-width: 78%;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-radius: 18px;
       font-size: 14px;
       line-height: 1.6;
@@ -198,7 +218,7 @@
     }
 
     .msg.user {
-      background: var(--user-bubble);
+      background: linear-gradient(135deg, #C9A84C, #E8C97A);
       color: var(--navy);
       font-weight: 500;
       border-bottom-right-radius: 4px;
@@ -206,7 +226,7 @@
     }
 
     .msg.bot {
-      background: var(--bot-bubble);
+      background: var(--navy-light);
       color: var(--white);
       border-bottom-left-radius: 4px;
       border: 1px solid rgba(201,168,76,0.1);
@@ -216,7 +236,7 @@
     .msg-label {
       font-size: 10px;
       color: var(--text-muted);
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       font-weight: 500;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -231,9 +251,9 @@
     }
 
     .typing {
-      background: var(--bot-bubble);
+      background: var(--navy-light);
       border: 1px solid rgba(201,168,76,0.1);
-      padding: 14px 18px;
+      padding: 12px 16px;
       border-radius: 18px;
       border-bottom-left-radius: 4px;
       display: flex;
@@ -249,6 +269,7 @@
       animation: typingBounce 1.2s infinite;
       opacity: 0.6;
     }
+
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
 
@@ -259,31 +280,31 @@
 
     .welcome {
       text-align: center;
-      padding: 20px 10px;
+      padding: 16px 10px;
       animation: msgIn 0.5s both;
     }
 
     .welcome-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 18px;
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
       background: linear-gradient(135deg, #C9A84C, #E8C97A);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'Playfair Display', serif;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
       color: var(--navy);
-      margin: 0 auto 14px;
+      margin: 0 auto 12px;
       box-shadow: 0 8px 24px rgba(201,168,76,0.3);
     }
 
     .welcome h3 {
       font-family: 'Playfair Display', serif;
-      font-size: 20px;
+      font-size: 18px;
       color: var(--gold-light);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .welcome p {
@@ -291,19 +312,19 @@
       color: var(--text-muted);
       line-height: 1.6;
       max-width: 280px;
-      margin: 0 auto 18px;
+      margin: 0 auto 14px;
     }
 
     .suggestions {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 7px;
       justify-content: center;
     }
 
     .suggestion {
       font-size: 12px;
-      padding: 7px 14px;
+      padding: 6px 12px;
       border-radius: 20px;
       border: 1px solid var(--border);
       background: transparent;
@@ -318,8 +339,50 @@
       border-color: var(--gold);
     }
 
+    /* Tools bar */
+    .tools-bar {
+      display: flex;
+      gap: 8px;
+      padding: 8px 16px;
+      border-top: 1px solid var(--border);
+      background: rgba(10,15,44,0.3);
+      flex-shrink: 0;
+      overflow-x: auto;
+    }
+
+    .tools-bar::-webkit-scrollbar { display: none; }
+
+    .tool-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      white-space: nowrap;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .tool-btn:hover {
+      background: rgba(201,168,76,0.1);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .tool-btn.active {
+      background: rgba(201,168,76,0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
     .input-area {
-      padding: 14px 16px 18px;
+      padding: 10px 14px 14px;
       border-top: 1px solid var(--border);
       background: rgba(10,15,44,0.5);
       flex-shrink: 0;
@@ -327,12 +390,12 @@
 
     .input-row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
       background: var(--navy-light);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 8px 8px 8px 16px;
+      border-radius: 14px;
+      padding: 7px 7px 7px 14px;
       transition: border-color 0.2s;
     }
 
@@ -355,8 +418,8 @@
     .input-row input::placeholder { color: var(--text-muted); }
 
     .send-btn {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 10px;
       background: linear-gradient(135deg, #C9A84C, #E8C97A);
       border: none;
@@ -371,14 +434,13 @@
 
     .send-btn:hover { transform: scale(1.05); box-shadow: 0 4px 16px rgba(201,168,76,0.4); }
     .send-btn:active { transform: scale(0.95); }
-
-    .send-btn svg { width: 15px; height: 15px; fill: var(--navy); }
+    .send-btn svg { width: 14px; height: 14px; fill: var(--navy); }
 
     .input-hint {
       text-align: center;
       font-size: 10px;
       color: var(--text-muted);
-      margin-top: 8px;
+      margin-top: 7px;
       letter-spacing: 0.03em;
     }
 
@@ -390,17 +452,22 @@
 <div class="stars" id="stars"></div>
 
 <div class="app">
+  <!-- Header -->
   <div class="header">
     <div class="logo">N</div>
     <div class="header-info">
       <div class="header-name">Nova AI</div>
       <div class="header-tagline">Your intelligent companion, always ready to help</div>
     </div>
-    <div class="status-dot">Online</div>
+    <div class="header-actions">
+      <div class="status-dot">Online</div>
+      <button class="clear-btn" onclick="clearChat()">🗑 Clear</button>
+    </div>
   </div>
 
+  <!-- Messages -->
   <div class="messages" id="messages">
-    <div class="welcome">
+    <div class="welcome" id="welcomeScreen">
       <div class="welcome-icon">N</div>
       <h3>Hello, I'm Nova</h3>
       <p>Your intelligent AI companion. Ask me anything — coding, crypto, science, business, health, or anything else!</p>
@@ -413,6 +480,14 @@
     </div>
   </div>
 
+  <!-- Tools Bar -->
+  <div class="tools-bar">
+    <a href="/social" class="tool-btn">📅 Social Media Generator</a>
+    <a href="/email" class="tool-btn">📧 Email Marketing</a>
+    <a href="/business" class="tool-btn">💡 Business Name Generator</a>
+  </div>
+
+  <!-- Input -->
   <div class="input-area">
     <div class="input-row">
       <input type="text" id="userInput" placeholder="Ask Nova anything..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -421,25 +496,16 @@
       </button>
     </div>
     <div class="input-hint">Powered by <span>Nova AI</span> · Built by You 🚀</div>
-<div style="text-align:center;margin-top:8px;">
-  <a href="/social" style="font-size:12px;color:#C9A84C;text-decoration:none;border:1px solid rgba(201,168,76,0.3);padding:5px 14px;border-radius:20px;">
-    📅 Social Media Generator
-  </a>
-</div>
   </div>
 </div>
 
 <script>
+  // Generate stars
   const starsContainer = document.getElementById('stars');
   for (let i = 0; i < 60; i++) {
     const star = document.createElement('div');
     star.className = 'star';
-    star.style.cssText = `
-      left: ${Math.random() * 100}%;
-      top: ${Math.random() * 100}%;
-      --d: ${2 + Math.random() * 4}s;
-      --delay: ${Math.random() * 4}s;
-    `;
+    star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${Math.random()*4}s;`;
     starsContainer.appendChild(star);
   }
 
@@ -448,21 +514,43 @@
     sendMessage();
   }
 
+  async function clearChat() {
+    try {
+      await fetch('/clear', { method: 'POST' });
+    } catch(e) {}
+    const messages = document.getElementById('messages');
+    messages.innerHTML = `
+      <div class="welcome" id="welcomeScreen">
+        <div class="welcome-icon">N</div>
+        <h3>Hello, I'm Nova</h3>
+        <p>Your intelligent AI companion. Ask me anything — coding, crypto, science, business, health, or anything else!</p>
+        <div class="suggestions">
+          <button class="suggestion" onclick="quickAsk('What is Bitcoin and how do I start trading?')">₿ Crypto Trading</button>
+          <button class="suggestion" onclick="quickAsk('Write me a Python script to check Bitcoin price')">🐍 Python Code</button>
+          <button class="suggestion" onclick="quickAsk('How do I start a successful online business?')">💼 Business</button>
+          <button class="suggestion" onclick="quickAsk('Tell me something amazing about space')">🚀 Science</button>
+        </div>
+      </div>`;
+  }
+
   async function sendMessage() {
     const input = document.getElementById('userInput');
     const messages = document.getElementById('messages');
     const text = input.value.trim();
     if (!text) return;
 
+    // Remove welcome screen
     const welcome = messages.querySelector('.welcome');
     if (welcome) welcome.remove();
 
+    // Add user message
     const userWrap = document.createElement('div');
     userWrap.className = 'msg-wrap user';
     userWrap.innerHTML = `<div class="msg-label">You</div><div class="msg user">${text}</div>`;
     messages.appendChild(userWrap);
     input.value = '';
 
+    // Add typing indicator
     const typingWrap = document.createElement('div');
     typingWrap.className = 'typing-wrap';
     typingWrap.id = 'typing';
@@ -487,7 +575,7 @@
       document.getElementById('typing').remove();
       const errWrap = document.createElement('div');
       errWrap.className = 'msg-wrap bot';
-      errWrap.innerHTML = `<div class="msg-label">Nova</div><div class="msg bot">Sorry, I took too long! Please try again.</div>`;
+      errWrap.innerHTML = `<div class="msg-label">Nova</div><div class="msg bot">Sorry, something went wrong! Please try again. 🔄</div>`;
       messages.appendChild(errWrap);
     }
     messages.scrollTop = messages.scrollHeight;

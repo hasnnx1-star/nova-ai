@@ -7,7 +7,7 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "nova2024secret")
 
-OPENROUTER_KEY = os.environ.get("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", "")
+OPENROUTER_KEY = os.environ.get("OPENROUTER_KEY", "")
 TAVILY_KEY = os.environ.get("TAVILY_KEY", "")
 NEWSDATA_KEY = os.environ.get("NEWSDATA_KEY", "")
 

@@ -1,4 +1,0 @@
-flash
-openai
-requests
-gunicorn

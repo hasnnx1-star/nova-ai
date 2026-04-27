@@ -89,6 +89,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Header */
     .header {
       padding: 16px 20px;
       background: linear-gradient(180deg, rgba(201,168,76,0.08) 0%, transparent 100%);
@@ -180,6 +181,7 @@
       color: var(--gold);
     }
 
+    /* Messages */
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -243,6 +245,7 @@
       padding: 0 4px;
     }
 
+    /* Typing */
     .typing-wrap {
       display: flex;
       flex-direction: column;
@@ -278,6 +281,7 @@
       30% { transform: translateY(-6px); opacity: 1; }
     }
 
+    /* Welcome */
     .welcome {
       text-align: center;
       padding: 16px 10px;
@@ -339,7 +343,7 @@
       border-color: var(--gold);
     }
 
-    /* Tools bar */
+    /* Tools Bar */
     .tools-bar {
       display: flex;
       gap: 8px;
@@ -375,12 +379,7 @@
       color: var(--gold);
     }
 
-    .tool-btn.active {
-      background: rgba(201,168,76,0.15);
-      border-color: var(--gold);
-      color: var(--gold);
-    }
-
+    /* Input */
     .input-area {
       padding: 10px 14px 14px;
       border-top: 1px solid var(--border);
@@ -412,7 +411,6 @@
       font-size: 14px;
       color: var(--white);
       font-family: 'DM Sans', sans-serif;
-      font-weight: 400;
     }
 
     .input-row input::placeholder { color: var(--text-muted); }
@@ -432,7 +430,7 @@
       box-shadow: 0 2px 8px rgba(201,168,76,0.3);
     }
 
-    .send-btn:hover { transform: scale(1.05); box-shadow: 0 4px 16px rgba(201,168,76,0.4); }
+    .send-btn:hover { transform: scale(1.05); }
     .send-btn:active { transform: scale(0.95); }
     .send-btn svg { width: 14px; height: 14px; fill: var(--navy); }
 
@@ -452,6 +450,7 @@
 <div class="stars" id="stars"></div>
 
 <div class="app">
+
   <!-- Header -->
   <div class="header">
     <div class="logo">N</div>
@@ -467,7 +466,7 @@
 
   <!-- Messages -->
   <div class="messages" id="messages">
-    <div class="welcome" id="welcomeScreen">
+    <div class="welcome">
       <div class="welcome-icon">N</div>
       <h3>Hello, I'm Nova</h3>
       <p>Your intelligent AI companion. Ask me anything — coding, crypto, science, business, health, or anything else!</p>
@@ -482,9 +481,9 @@
 
   <!-- Tools Bar -->
   <div class="tools-bar">
-    <a href="/social" class="tool-btn">📅 Social Media Generator</a>
+    <a href="/social" class="tool-btn">📅 Social Media</a>
     <a href="/email" class="tool-btn">📧 Email Marketing</a>
-    <a href="/business" class="tool-btn">💡 Business Name Generator</a>
+    <a href="/business" class="tool-btn">💡 Business Names</a>
   </div>
 
   <!-- Input -->
@@ -497,6 +496,7 @@
     </div>
     <div class="input-hint">Powered by <span>Nova AI</span> · Built by You 🚀</div>
   </div>
+
 </div>
 
 <script>
@@ -515,12 +515,9 @@
   }
 
   async function clearChat() {
-    try {
-      await fetch('/clear', { method: 'POST' });
-    } catch(e) {}
-    const messages = document.getElementById('messages');
-    messages.innerHTML = `
-      <div class="welcome" id="welcomeScreen">
+    try { await fetch('/clear', { method: 'POST' }); } catch(e) {}
+    document.getElementById('messages').innerHTML = `
+      <div class="welcome">
         <div class="welcome-icon">N</div>
         <h3>Hello, I'm Nova</h3>
         <p>Your intelligent AI companion. Ask me anything — coding, crypto, science, business, health, or anything else!</p>
@@ -539,18 +536,15 @@
     const text = input.value.trim();
     if (!text) return;
 
-    // Remove welcome screen
     const welcome = messages.querySelector('.welcome');
     if (welcome) welcome.remove();
 
-    // Add user message
     const userWrap = document.createElement('div');
     userWrap.className = 'msg-wrap user';
     userWrap.innerHTML = `<div class="msg-label">You</div><div class="msg user">${text}</div>`;
     messages.appendChild(userWrap);
     input.value = '';
 
-    // Add typing indicator
     const typingWrap = document.createElement('div');
     typingWrap.className = 'typing-wrap';
     typingWrap.id = 'typing';
@@ -566,7 +560,6 @@
       });
       const data = await response.json();
       document.getElementById('typing').remove();
-
       const botWrap = document.createElement('div');
       botWrap.className = 'msg-wrap bot';
       botWrap.innerHTML = `<div class="msg-label">Nova</div><div class="msg bot">${data.reply}</div>`;

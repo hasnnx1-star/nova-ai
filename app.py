@@ -19,7 +19,7 @@ client = OpenAI(
 )
 
 # ─── MODEL ───────────────────────────────────────────────────
-# Change this one line when you add credits
+# Change to "deepseek/deepseek-chat" when you add credits
 MODEL = "openrouter/free"
 
 # ─── NOVA PERSONALITY ────────────────────────────────────────
@@ -97,6 +97,18 @@ Always format your response clearly with DAY 1, DAY 2 etc.
 Each day must have: Post content with emojis, Hashtags, and Best time to post.
 """
 
+EMAIL_PERSONALITY = """
+You are Nova, an expert email marketing specialist who writes compelling, high-converting emails for small businesses worldwide.
+You write emails that feel personal, authentic and drive real results.
+Always format emails clearly with Subject Line, Preview Text, and Email Body.
+"""
+
+BUSINESS_NAME_PERSONALITY = """
+You are Nova, a world-class branding expert and creative director who specializes in creating memorable, powerful business names and slogans for companies worldwide.
+You generate names that are unique, memorable, easy to pronounce, and available as domain names.
+Always provide creative reasoning for each name suggestion.
+"""
+
 # ─── LIVE DATA FUNCTIONS ─────────────────────────────────────
 
 def get_crypto_price(coin_name):
@@ -155,28 +167,32 @@ def get_crypto_from_message(message):
 
 @app.route("/")
 def home():
-    """Main chat page"""
     session["conversation"] = []
     return render_template("index.html")
 
 @app.route("/social")
 def social():
-    """Social media generator page"""
     return render_template("social.html")
+
+@app.route("/email")
+def email():
+    return render_template("email.html")
+
+@app.route("/business")
+def business():
+    return render_template("business.html")
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    """Handle chat messages"""
     try:
         data = request.get_json()
         if not data or "message" not in data:
-            return jsonify({"reply": "I didn't receive your message. Please try again!"}), 400
+            return jsonify({"reply": "I didn't receive your message. Please try again!"})
 
         user_input = data["message"].strip()
         if not user_input:
-            return jsonify({"reply": "Please type a message!"}), 400
+            return jsonify({"reply": "Please type a message!"})
 
-        # Initialize conversation if needed
         if "conversation" not in session:
             session["conversation"] = []
 
@@ -191,22 +207,19 @@ def chat():
                 if price_data:
                     live_context += f"\n[LIVE CRYPTO DATA as of {current_time}]\n{price_data}\n"
 
-        # Build enhanced message with live data
         enhanced_message = user_input
         if live_context:
             enhanced_message = f"{user_input}\n\n{live_context}\n\nPlease use this live data in your response."
 
-        # Add to conversation
         session["conversation"].append({
             "role": "user",
             "content": enhanced_message
         })
 
-        # Keep conversation history manageable (last 20 messages)
+        # Keep conversation history manageable
         if len(session["conversation"]) > 20:
             session["conversation"] = session["conversation"][-20:]
 
-        # Call AI
         response = client.chat.completions.create(
             model=MODEL,
             max_tokens=2048,
@@ -219,36 +232,31 @@ def chat():
         )
 
         reply = response.choices[0].message.content
-
-        # Save clean version to history
         session["conversation"][-1]["content"] = user_input
         session["conversation"].append({
             "role": "assistant",
             "content": reply
         })
         session.modified = True
-
         return jsonify({"reply": reply})
 
     except Exception as e:
         error_msg = str(e)
-        # Give user friendly error messages
         if "401" in error_msg:
-            return jsonify({"reply": "Authentication error — please check the API key in settings."})
+            return jsonify({"reply": "Authentication error — please check the API key."})
         elif "429" in error_msg:
             return jsonify({"reply": "Nova is very busy right now! Please wait a moment and try again. ⏳"})
         elif "404" in error_msg:
             return jsonify({"reply": "Model not available right now. Please try again shortly."})
         else:
-            return jsonify({"reply": f"Something went wrong. Please try again! Error: {error_msg}"})
+            return jsonify({"reply": f"Something went wrong. Please try again!"})
 
 @app.route("/generate-posts", methods=["POST"])
 def generate_posts():
-    """Generate social media posts"""
     try:
         data = request.get_json()
         if not data:
-            return jsonify({"posts": "No data received. Please try again!"}), 400
+            return jsonify({"posts": "No data received. Please try again!"})
 
         business_type = data.get("business_type", "").strip()
         location = data.get("location", "").strip()
@@ -256,11 +264,9 @@ def generate_posts():
         platform = data.get("platform", "Instagram")
         description = data.get("description", "").strip()
 
-        # Validate required field
         if not business_type:
-            return jsonify({"posts": "Please enter your business type!"}), 400
+            return jsonify({"posts": "Please enter your business type!"})
 
-        # Build prompt
         location_text = f"in {location}" if location else "globally"
         description_text = f"\nExtra details: {description}" if description else ""
 
@@ -277,26 +283,14 @@ Post: [Engaging post with relevant emojis]
 Hashtags: [5-7 relevant hashtags]
 Best time to post: [Specific time]
 
-Rules:
-- Make each post unique and creative
-- Posts must feel human and authentic not like AI
-- Tailor content specifically for {platform}
-- Target audience {location_text}
-- Match the {tone} tone throughout
-- Include a call to action in each post"""
+Make each post unique, creative and human. Include a call to action in each post."""
 
         response = client.chat.completions.create(
             model=MODEL,
             max_tokens=2048,
             messages=[
-                {
-                    "role": "system",
-                    "content": SOCIAL_MEDIA_PERSONALITY
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
+                {"role": "system", "content": SOCIAL_MEDIA_PERSONALITY},
+                {"role": "user", "content": prompt}
             ]
         )
 
@@ -307,14 +301,111 @@ Rules:
         error_msg = str(e)
         if "429" in error_msg:
             return jsonify({"posts": "Nova is very busy right now! Please wait a moment and try again. ⏳"})
-        elif "401" in error_msg:
-            return jsonify({"posts": "Authentication error — please check the API key."})
         else:
-            return jsonify({"posts": f"Something went wrong. Please try again! Error: {error_msg}"})
+            return jsonify({"posts": f"Something went wrong. Please try again!"})
+
+@app.route("/generate-email", methods=["POST"])
+def generate_email():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"email": "No data received. Please try again!"})
+
+        business_type = data.get("business_type", "").strip()
+        email_type = data.get("email_type", "promotional")
+        tone = data.get("tone", "friendly")
+        offer = data.get("offer", "").strip()
+        audience = data.get("audience", "").strip()
+
+        if not business_type:
+            return jsonify({"email": "Please enter your business type!"})
+
+        prompt = f"""Write a professional marketing email for this business:
+
+Business: {business_type}
+Email Type: {email_type}
+Tone: {tone}
+Special Offer/Details: {offer if offer else "No special offer"}
+Target Audience: {audience if audience else "General customers"}
+
+Write a complete email with:
+SUBJECT LINE: [Catchy subject line]
+PREVIEW TEXT: [Short preview text]
+EMAIL BODY: [Full email with greeting, main content, call to action, and sign off]
+
+Make it feel personal, human and compelling. Not like a generic template."""
+
+        response = client.chat.completions.create(
+            model=MODEL,
+            max_tokens=2048,
+            messages=[
+                {"role": "system", "content": EMAIL_PERSONALITY},
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        email_content = response.choices[0].message.content
+        return jsonify({"email": email_content})
+
+    except Exception as e:
+        error_msg = str(e)
+        if "429" in error_msg:
+            return jsonify({"email": "Nova is very busy right now! Please wait a moment and try again. ⏳"})
+        else:
+            return jsonify({"email": "Something went wrong. Please try again!"})
+
+@app.route("/generate-business-name", methods=["POST"])
+def generate_business_name():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"names": "No data received. Please try again!"})
+
+        industry = data.get("industry", "").strip()
+        description = data.get("description", "").strip()
+        style = data.get("style", "modern")
+        location = data.get("location", "").strip()
+
+        if not industry:
+            return jsonify({"names": "Please enter your industry!"})
+
+        prompt = f"""Generate 10 unique, creative business names for:
+
+Industry: {industry}
+Description: {description if description else "General business"}
+Style: {style}
+Location/Market: {location if location else "Global"}
+
+For each name provide:
+NAME: [Business name]
+SLOGAN: [Catchy slogan]
+WHY IT WORKS: [Brief explanation]
+DOMAIN: [Suggested domain like businessname.com]
+
+Make names memorable, unique, easy to pronounce and spell.
+Mix different styles — some short, some descriptive, some invented words."""
+
+        response = client.chat.completions.create(
+            model=MODEL,
+            max_tokens=2048,
+            messages=[
+                {"role": "system", "content": BUSINESS_NAME_PERSONALITY},
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        names = response.choices[0].message.content
+        return jsonify({"names": names})
+
+    except Exception as e:
+        error_msg = str(e)
+        if "429" in error_msg:
+            return jsonify({"names": "Nova is very busy right now! Please wait a moment and try again. ⏳"})
+        else:
+            return jsonify({"names": "Something went wrong. Please try again!"})
 
 @app.route("/health")
 def health():
-    """Health check endpoint"""
     return jsonify({
         "status": "healthy",
         "model": MODEL,
@@ -323,12 +414,9 @@ def health():
 
 @app.route("/clear", methods=["POST"])
 def clear():
-    """Clear conversation history"""
     session["conversation"] = []
     session.modified = True
     return jsonify({"status": "cleared"})
-
-# ─── ERROR HANDLERS ──────────────────────────────────────────
 
 @app.errorhandler(404)
 def not_found(e):
@@ -337,8 +425,6 @@ def not_found(e):
 @app.errorhandler(500)
 def server_error(e):
     return jsonify({"error": "Server error — please try again"}), 500
-
-# ─── MAIN ────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

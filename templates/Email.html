@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova AI — Email Marketing Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0A0F2C;
+      --navy-mid: #111936;
+      --navy-light: #1A2444;
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --white: #F8F6F0;
+      --text-muted: #8A93B2;
+      --border: rgba(201,168,76,0.15);
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    .header { display: flex; align-items: center; gap: 14px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .back-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--gold); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; text-decoration: none; transition: all 0.2s; }
+    .back-btn:hover { background: rgba(201,168,76,0.1); }
+    .logo { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #C9A84C, #E8C97A); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); }
+    .header-text h1 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--gold-light); }
+    .header-text p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .card { background: var(--navy-mid); border: 1px solid var(--border); border-radius: 20px; padding: 28px; margin-bottom: 20px; }
+    .card-title { font-size: 15px; font-weight: 500; color: var(--gold-light); margin-bottom: 20px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 12px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase; }
+    input, select, textarea { background: var(--navy-light); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 14px; color: var(--white); font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; width: 100%; }
+    input:focus, select:focus, textarea:focus { border-color: rgba(201,168,76,0.4); }
+    input::placeholder, textarea::placeholder { color: var(--text-muted); }
+    select option { background: var(--navy-mid); }
+    textarea { resize: vertical; min-height: 80px; }
+    .generate-btn { width: 100%; padding: 14px; border-radius: 14px; background: linear-gradient(135deg, #C9A84C, #E8C97A); border: none; font-size: 15px; font-weight: 500; color: var(--navy); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; margin-top: 8px; }
+    .generate-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
+    .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .results { display: none; }
+    .results.visible { display: block; }
+    .loading { text-align: center; padding: 40px; display: none; }
+    .loading.visible { display: block; }
+    .loading-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
+    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); animation: bounce 1.2s infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-10px); opacity: 1; } }
+    .loading p { color: var(--text-muted); font-size: 14px; }
+    .raw-results { background: var(--navy-light); border: 1px solid var(--border); border-radius: 14px; padding: 20px; font-size: 14px; line-height: 1.8; color: var(--white); white-space: pre-wrap; }
+    .copy-all-btn { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: transparent; color: var(--gold); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; margin-top: 12px; transition: all 0.2s; }
+    .copy-all-btn:hover { background: rgba(201,168,76,0.1); }
+    .nav-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .nav-link { padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-size: 12px; text-decoration: none; transition: all 0.2s; }
+    .nav-link:hover { border-color: var(--gold); color: var(--gold); }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <a href="/" class="back-btn">← Back to Nova</a>
+    <div class="logo">N</div>
+    <div class="header-text">
+      <h1>Email Marketing Generator</h1>
+      <p>Write high-converting marketing emails in seconds</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📧 Tell Nova about your email</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Business Type</label>
+        <input type="text" id="businessType" placeholder="e.g. Coffee Shop, Gym, Salon...">
+      </div>
+      <div class="form-group">
+        <label>Email Type</label>
+        <select id="emailType">
+          <option value="promotional">🎯 Promotional Offer</option>
+          <option value="newsletter">📰 Weekly Newsletter</option>
+          <option value="welcome">👋 Welcome Email</option>
+          <option value="announcement">📢 New Product Launch</option>
+          <option value="holiday">🎉 Holiday Special</option>
+          <option value="followup">🤝 Follow Up</option>
+          <option value="reengagement">💌 Re-engagement</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tone</label>
+        <select id="tone">
+          <option value="friendly">😊 Friendly & Warm</option>
+          <option value="professional">💼 Professional</option>
+          <option value="exciting">🎉 Exciting & Urgent</option>
+          <option value="luxury">👑 Luxury & Premium</option>
+          <option value="casual">😎 Casual & Fun</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Target Audience</label>
+        <input type="text" id="audience" placeholder="e.g. Young professionals, Parents...">
+      </div>
+      <div class="form-group full">
+        <label>Special Offer or Details</label>
+        <textarea id="offer" placeholder="e.g. 30% off this weekend, New menu launched, Free delivery..."></textarea>
+      </div>
+    </div>
+    <button class="generate-btn" id="generateBtn" onclick="generateEmail()">
+      ✉️ Generate Marketing Email
+    </button>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+    <p>Nova is writing your email... ✍️</p>
+  </div>
+
+  <div class="results" id="results">
+    <div class="card">
+      <div class="card-title">✉️ Your Marketing Email</div>
+      <div id="emailContent"></div>
+      <button class="copy-all-btn" onclick="copyAll()">📋 Copy Email</button>
+      <div class="nav-links">
+        <a href="/social" class="nav-link">📅 Social Media Generator</a>
+        <a href="/business" class="nav-link">💡 Business Name Generator</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let emailText = '';
+
+  async function generateEmail() {
+    const businessType = document.getElementById('businessType').value.trim();
+    if (!businessType) { alert('Please enter your business type!'); return; }
+
+    const btn = document.getElementById('generateBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Generating...';
+    document.getElementById('loading').classList.add('visible');
+    document.getElementById('results').classList.remove('visible');
+
+    try {
+      const response = await fetch('/generate-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          business_type: businessType,
+          email_type: document.getElementById('emailType').value,
+          tone: document.getElementById('tone').value,
+          offer: document.getElementById('offer').value,
+          audience: document.getElementById('audience').value
+        })
+      });
+      const data = await response.json();
+      emailText = data.email;
+      document.getElementById('loading').classList.remove('visible');
+      document.getElementById('emailContent').innerHTML = `<div class="raw-results">${data.email}</div>`;
+      document.getElementById('results').classList.add('visible');
+    } catch (error) {
+      document.getElementById('loading').classList.remove('visible');
+      document.getElementById('emailContent').innerHTML = `<div class="raw-results">Sorry, something went wrong. Please try again!</div>`;
+      document.getElementById('results').classList.add('visible');
+    }
+
+    btn.disabled = false;
+    btn.textContent = '✉️ Generate Marketing Email';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function copyAll() {
+    navigator.clipboard.writeText(emailText).then(() => {
+      const btn = document.querySelector('.copy-all-btn');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy Email', 2000);
+    });
+  }
+</script>
+</body>
+</html>
